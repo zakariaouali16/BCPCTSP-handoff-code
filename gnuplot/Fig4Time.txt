@@ -1,0 +1,31 @@
+#set terminal enhanced font "Helvetica,18"`
+#set terminal postscript enhanced font "Helvetica,32"
+set termoption enhanced
+set terminal postscript eps enhanced
+#set terminal postscript enhanced font eps 
+set term eps
+set auto x
+set auto y
+set yrange [0:1500000]
+set key left top
+set key font ",30"
+set style data histogram
+set style histogram cluster gap 1
+set term eps
+set style fill pattern border -1
+#set boxwidth 0.5 
+set style histogram errorbars gap 1 lw 1
+set size 1.1,1.1
+#set xlabel 'Migration coefficient {/Symbol \155}' enhanced
+#set xlabel 'Migration coefficient {/Symbol m}' #'{\155}' 
+set xlabel 'Budget (miles)' 
+#set ylabel "Total migrat. and comm. \n cost of VM pairs (x1e6)"
+set ylabel "Execution Time (ms)" 
+set terminal postscript eps solid color lw 1 "Arial" 34
+set offset 0,0,0,0
+
+set output 'Fig4Time.eps'
+plot 'Fig4Time.dat' using 2:3 t 'P-MARL', '' using 4:5 t 'ILP', '' using 6:7:xticlabels(1) t 'Ant-Q'
+#'' using 0:($2+4):(sprintf("%3.2f",$2)) with labels font ',19' offset -1.5,0 notitle,\
+#'' using 0:($4+4):(sprintf("%3.2f",$4)) with labels font ',19' offset -.5,0 notitle,\
+#'' using 0:($10+4):(sprintf("%3.2f",$10)) with labels font ',19' offset 1,.33 notitle

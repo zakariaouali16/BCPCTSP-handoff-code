@@ -1,0 +1,43 @@
+#set terminal enhanced font "Helvetica,18"`
+#set terminal postscript enhanced font "Helvetica,32"
+set termoption enhanced
+set terminal postscript eps enhanced
+#set terminal postscript enhanced font eps 
+set term eps
+#set auto x
+#set auto y
+set yrange [2000:14000]
+set xrange [0:11]
+#set auto y
+set key top right
+set key font ",36"
+
+#set style data histogram
+#set style histogram cluster gap 1
+set term eps
+set style fill pattern border -1
+#set boxwidth 0.5 
+#set style histogram errorbars gap 1 lw 1
+set size 1.1,1.1
+#set xlabel 'Migration coefficient {/Symbol \155}' enhanced
+#set xlabel 'Migration coefficient {/Symbol m}' #'{\155}' 
+set xlabel 'm' 
+set xtics font ",38"
+#set ylabel "Total migrat. and comm. \n cost of VM pairs (x1e6)"
+set ylabel "Distance (miles)" font ",32"
+#set ylabel font ",38"
+#set xlabel font ",38"
+set xtics ("1" 1, "3" 3, "5" 5, "7" 7, "10" 10)
+set terminal postscript eps solid color lw 1 "Arial" 39
+
+set offset 0,0,0,0
+
+set output 'Fig5Dist.eps'
+plot "Fig5Dist.dat" u 1:2:($3) ps 3 w yerrorlines t '{/Symbol B}=4000', \
+     "Fig5Dist.dat" u 1:4:($5) ps 3 w yerrorlines t '{/Symbol B}=6000', \
+     "Fig5Dist.dat" u 1:6:($7) ps 3 w yerrorlines t '{/Symbol B}=8000', \
+     "Fig5Dist.dat" u 1:8:($9) ps 3 w yerrorlines t '{/Symbol B}=10000'
+#plot '10epochactual.dat' using 2:3 t 'Greedy', '' using 4:5 t 'LB', '' using 6:7 t 'Approximation', '' using 8:9:xticlabels(1) t 'BI'
+#'' using 0:($2+4):(sprintf("%3.2f",$2)) with labels font ',19' offset -1.5,0 notitle,\
+#'' using 0:($4+4):(sprintf("%3.2f",$4)) with labels font ',19' offset -.5,0 notitle,\
+#'' using 0:($10+4):(sprintf("%3.2f",$10)) with labels font ',19' offset 1,.33 notitle
