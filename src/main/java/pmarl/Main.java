@@ -92,14 +92,17 @@ public class Main {
             System.out.println("Selected End City ID:   " + end);
             System.out.println("-----------------------------");
 
+            // Build the graph once per run — same topology for all 4 budgets
+            initList();
+            initGraph();
+            statesCt = sGraph.n();
+
             double[] budgets = { 4_000_000, 6_000_000, 8_000_000, 10_000_000 };
             for (double b : budgets) {
                 budget = b;
                 System.out.println("\n---------- Budget: " + (long) budget + " ----------");
 
                 System.out.println("\n========== First greedy algorithm ==========");
-                initList();
-                initGraph();
                 startTime = System.nanoTime();
                 traverseP();
                 endTime = System.nanoTime();
@@ -111,8 +114,6 @@ public class Main {
                 System.out.printf("Remaining Budget: %.2f miles\n", remainingBudget);
 
                 System.out.println("\n========== Second greedy algorithm ==========");
-                initList();
-                initGraph();
                 startTime = System.nanoTime();
                 traverseR();
                 endTime = System.nanoTime();
@@ -124,8 +125,6 @@ public class Main {
                 System.out.printf("Remaining Budget: %.2f miles\n", remainingBudget);
 
                 System.out.println("\n========== BC-PC-TSP MARL algorithm ==========");
-                initList();
-                initGraph();
                 initStatics();
                 startTime = System.nanoTime();
                 printIlpArrays();
@@ -143,9 +142,6 @@ public class Main {
                 System.out.println("Found on episode: " + routeMaxIter);
 
                 System.out.println("\n========== Ant-Q algorithm ==========");
-                initList();
-                initGraph();
-                statesCt = sGraph.n();
                 startTime = System.nanoTime();
                 AntQ.run(sGraph, budget, statesCt);
                 endTime = System.nanoTime();
@@ -628,11 +624,11 @@ public class Main {
                 if (line.isEmpty()) continue;
                 String[] parts = line.split(",");
                 String name = parts[0].trim();
-                double lat = Double.parseDouble(parts[1].trim());
-                double lon = Double.parseDouble(parts[2].trim());
+                double x = Double.parseDouble(parts[1].trim());
+                double y = Double.parseDouble(parts[2].trim());
                 int pop = Integer.parseInt(parts[3].trim());
 
-                arrCities.add(new CityNode(name, lat, lon, pop));
+                arrCities.add(new CityNode(name, x, y, pop, true));
                 nameList.add(name.toLowerCase());
 
                 arrCities.get(arrCities.size() - 1).originalIndex = originIndex;
@@ -706,8 +702,8 @@ public class Main {
                 } else {
                     // randomly mark some path as inaccessible
                     if (rand.nextDouble() > missingProb) {
-                        sGraph.setEdge(i, j, CityNode.getDistance(arrCities.get(i), arrCities.get(j)));
-                        sGraph.setEdge(j, i, CityNode.getDistance(arrCities.get(j), arrCities.get(i)));
+                        sGraph.setEdge(i, j, CityNode.getPlanarDistance(arrCities.get(i), arrCities.get(j)));
+                        sGraph.setEdge(j, i, CityNode.getPlanarDistance(arrCities.get(j), arrCities.get(i)));
                     } else {
                         sGraph.setEdge(i, j, Double.MAX_VALUE);
                         sGraph.setEdge(j, i, Double.MAX_VALUE);

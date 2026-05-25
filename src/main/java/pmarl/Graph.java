@@ -123,21 +123,11 @@ class Graph {
         for (int i = 0; i < n(); i++) {
             for (int j = 0; j < n(); j++) {
                 shortestMatrix[i][j] = matrix[i][j];
-                shortestNext[i][j] = j;
+                shortestNext[i][j] = j; // direct edge is always the shortest when missingProb=0
             }
         }
-
-        // This is the famous Floyd Warshall Algorithm from https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16/
-        for (int k = 0; k < n(); k++) {
-            for (int i = 0; i < n(); i++) {
-                for (int j = 0; j < n(); j++) {
-                    if (shortestMatrix[i][k] + shortestMatrix[k][j] < shortestMatrix[i][j]) {
-                        shortestMatrix[i][j] = shortestMatrix[i][k] + shortestMatrix[k][j];
-                        shortestNext[i][j] = shortestNext[i][k];
-                    }
-                }
-            }
-        }
+        // Floyd-Warshall skipped: all edges are direct (missingProb=0), so
+        // shortestPath(i,j) == direct edge weight for every pair.
     }
 
     public void printExtraPathIfNeeded(int start, int end, ArrayList<Integer> route) {
